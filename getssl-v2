@@ -2188,14 +2188,14 @@ for d in $alldomains; do
                  | sed -e 's:=*$::g' -e 'y:+/:-_:')
       debug auth_key "$auth_key"
 
-      debug "adding dns via command: $DNS_ADD_COMMAND $d $auth_key"
-      if ! eval "$DNS_ADD_COMMAND" "$d" "$auth_key" ; then
-        error_exit "DNS_ADD_COMMAND failed for domain $d"
+      debug "adding dns via command: $DNS_ADD_COMMAND ${d//\*\./} $auth_key"
+      if ! eval "$DNS_ADD_COMMAND" "${d//\*\./}" "$auth_key" ; then
+        error_exit "DNS_ADD_COMMAND failed for domain ${d//\*\./}"
       fi
 
       # find a primary / authoritative DNS server for the domain
       if [[ -z "$AUTH_DNS_SERVER" ]]; then
-        get_auth_dns "$d"
+        get_auth_dns "${d//\*\./}"
       else
         primary_ns="$AUTH_DNS_SERVER"
       fi
